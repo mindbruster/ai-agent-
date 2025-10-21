@@ -66,7 +66,7 @@ class AIAgentOrchestrator:
         
         # Initialize the model
         model = genai.GenerativeModel(
-            model_name=gemini_config.get("model", "gemini-pro"),
+            model_name=gemini_config.get("model", "gemini-2.5-flash"),
             generation_config=genai.types.GenerationConfig(
                 temperature=gemini_config.get("temperature", 0.7),
                 max_output_tokens=gemini_config.get("max_tokens", 1000)

@@ -119,6 +119,17 @@ class ConfigManager:
         # First try to get from environment variables
         env_key = key.upper().replace('.', '_')
         env_value = os.getenv(env_key)
+        
+        # Handle special mappings for email configuration
+        if key == "email.username" and not env_value:
+            env_value = os.getenv("SMTP_USER") or os.getenv("EMAIL_USERNAME")
+        elif key == "email.password" and not env_value:
+            env_value = os.getenv("SMTP_PASS") or os.getenv("EMAIL_PASSWORD")
+        elif key == "email.smtp_server" and not env_value:
+            env_value = os.getenv("SMTP_HOST")
+        elif key == "email.smtp_port" and not env_value:
+            env_value = os.getenv("SMTP_PORT")
+        
         if env_value:
             return env_value
         
@@ -135,7 +146,13 @@ class ConfigManager:
     
     def get_gemini_config(self) -> Dict[str, Any]:
         """Get Gemini configuration"""
-        return self.config.get("gemini", {})
+        gemini_config = self.config.get("gemini", {}).copy()
+        
+        # Override with environment variables if available
+        if os.getenv("GEMINI_API_KEY"):
+            gemini_config["api_key"] = os.getenv("GEMINI_API_KEY")
+        
+        return gemini_config
     
     def get_hubspot_config(self) -> Dict[str, Any]:
         """Get HubSpot configuration"""

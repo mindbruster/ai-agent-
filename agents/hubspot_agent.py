@@ -104,6 +104,19 @@ class HubSpotAgent:
                 params=self.api_key_param,
                 json=payload
             )
+            
+            # If contact already exists (409 conflict), update it instead
+            if response.status_code == 409:
+                logger.info(f"Contact already exists, updating instead: {contact.email}")
+                # Search for existing contact by email
+                existing_contact = self.search_contact_by_email(contact.email)
+                if existing_contact:
+                    contact_id = existing_contact.get('id')
+                    return self.update_contact(contact_id, properties)
+                else:
+                    logger.error(f"Could not find existing contact to update: {contact.email}")
+                    raise Exception(f"Contact {contact.email} already exists but could not be found for update")
+            
             response.raise_for_status()
             
             result = response.json()
@@ -141,6 +154,50 @@ class HubSpotAgent:
         except requests.exceptions.RequestException as e:
             logger.error(f"Error getting contact: {e}")
             raise
+    
+    def search_contact_by_email(self, email: str) -> Dict[str, Any]:
+        """
+        Search for a contact by email address
+        
+        Args:
+            email: Email address to search for
+            
+        Returns:
+            Dict containing the contact data if found, None otherwise
+        """
+        try:
+            # Search for contact by email
+            search_payload = {
+                "filterGroups": [{
+                    "filters": [{
+                        "propertyName": "email",
+                        "operator": "EQ",
+                        "value": email
+                    }]
+                }],
+                "sorts": [],
+                "limit": 1
+            }
+            
+            response = requests.post(
+                f"{self.base_url}/crm/v3/objects/contacts/search",
+                headers=self.headers,
+                params=self.api_key_param,
+                json=search_payload
+            )
+            response.raise_for_status()
+            
+            result = response.json()
+            contacts = result.get("results", [])
+            
+            if contacts:
+                return contacts[0]
+            else:
+                return None
+                
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error searching for contact by email: {e}")
+            return None
     
     def search_contacts(self, query: str) -> List[Dict[str, Any]]:
         """

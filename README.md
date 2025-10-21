@@ -1,6 +1,6 @@
  # 🤖 AI Agent Workflow System
 
-A comprehensive AI-powered workflow system that automates CRM operations using LangGraph, OpenAI, and HubSpot integration. This system can parse natural language requests and automatically create contacts, deals, and send email notifications.
+A comprehensive AI-powered workflow system that automates CRM operations using LangGraph, Google Gemini AI, and HubSpot integration. This system can parse natural language requests and automatically create contacts, deals, and send email notifications.
 
 ## ✨ Features
 
@@ -17,7 +17,7 @@ A comprehensive AI-powered workflow system that automates CRM operations using L
 ### Prerequisites
 
 - Python 3.10+
-- OpenAI API key
+- Google Gemini API key
 - HubSpot account with API access
 - Gmail account with App Password (for email notifications)
 
@@ -73,7 +73,7 @@ A comprehensive AI-powered workflow system that automates CRM operations using L
 
 ## 🔑 Getting API Credentials
 
-### 1. Gemini API Key (5 minutes)
+### 1. Google Gemini API Key (5 minutes)
 1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
 2. Create a new API key
 3. Copy the key (starts with `AIza`)
@@ -133,19 +133,20 @@ python main.py --test
 └─────────────────┘    └──────────────────┘    └─────────────────┘
                                 │
                                 ▼
-                       ┌──────────────────┐
-                       │   Email Agent    │
-                       │   (SMTP/Gmail)   │
-                       └──────────────────┘
+                       ┌──────────────────┐    ┌─────────────────┐
+                       │   Email Agent    │    │   Gemini AI     │
+                       │   (SMTP/Gmail)   │    │   (NLP Engine)  │
+                       └──────────────────┘    └─────────────────┘
 ```
 
 ### Components
 
 1. **Orchestrator**: Main workflow engine using LangGraph
-2. **HubSpot Agent**: Handles CRM operations
-3. **Email Agent**: Manages email notifications
-4. **Config Manager**: Handles configuration and API keys
-5. **Main App**: CLI interface and application entry point
+2. **Gemini AI Integration**: Natural language processing and intent recognition
+3. **HubSpot Agent**: Handles CRM operations
+4. **Email Agent**: Manages email notifications
+5. **Config Manager**: Handles configuration and API keys
+6. **Main App**: CLI interface and application entry point
 
 ## 🧪 Testing
 
@@ -185,7 +186,7 @@ ai-agent-workflow/
 ### Environment Variables
 You can also use environment variables instead of config.json:
 ```bash
-export OPENAI_API_KEY="your-key"
+export GEMINI_API_KEY="your-key"
 export HUBSPOT_API_KEY="your-key"
 export EMAIL_USERNAME="your-email"
 export EMAIL_PASSWORD="your-password"
@@ -193,7 +194,7 @@ export EMAIL_PASSWORD="your-password"
 
 ### Custom Configuration
 Edit `config/config.json` to customize:
-- OpenAI model and parameters
+- Gemini model and parameters
 - HubSpot API settings
 - Email server configuration
 - Logging levels
@@ -320,4 +321,4 @@ If you encounter any issues:
 
 ---
 
-**Built with ❤️ using Python, LangGraph, OpenAI, and HubSpot**
+**Built with ❤️ using Python, LangGraph, Google Gemini AI, and HubSpot**
